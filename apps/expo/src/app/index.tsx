@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter } from "expo-router";
 import { FlashList } from "@shopify/flash-list";
 
-import { api, type RouterOutputs } from "../utils/api";
+import { api, type RouterOutputs } from "~/utils/api";
 
 const PostCard: React.FC<{
   post: RouterOutputs["post"]["all"][number];
@@ -85,10 +85,12 @@ const CreatePost: React.FC = () => {
 };
 
 const Index = () => {
+  const utils = api.useContext();
+
   const postQuery = api.post.all.useQuery();
 
   const deletePostMutation = api.post.delete.useMutation({
-    onSettled: () => postQuery.refetch(),
+    onSettled: () => utils.post.all.invalidate(),
   });
 
   return (
@@ -101,7 +103,7 @@ const Index = () => {
         </Text>
 
         <Button
-          onPress={() => void postQuery.refetch()}
+          onPress={() => void utils.post.all.invalidate()}
           title="Refresh posts"
           color={"#f472b6"}
         />
