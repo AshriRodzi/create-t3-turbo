@@ -10,56 +10,184 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id      String @id @default(cuid())
-    title   String
-    content String
+model announcement {
+	id String @db.VarChar(512) @id
+	title String @db.VarChar(512)
+	content String @db.VarChar(512)
+	dateCreated DateTime 
+	creator String @db.VarChar(512)
 }
 
-// NextAuth.js Models
-// NOTE: When using postgresql, mysql or sqlserver, 
-// uncomment the @db.Text annotations below
-// @see https://next-auth.js.org/schemas/models
-model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? // @db.Text
-    access_token      String? // @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? // @db.Text
-    session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@unique([provider, providerAccountId])
+model announcements {
+	id String @db.VarChar(512) @id
+	title String @db.VarChar(512)
+	content String @db.VarChar(512)
+	dateCreated DateTime 
+	creator String @db.VarChar(512)
 }
 
-model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+model emailverifications {
+    id String @db.VarChar(512) @id
+    verified Boolean
+    userId String @db.VarChar(512)
+    email String @db.VarChar(512)
+    dateCreated DateTime 
+    dateVerified DateTime? 
 }
 
-model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
+model events {
+    id String @db.VarChar(512) @id
+    type String? @db.VarChar(512)
+    route String? @db.VarChar(512)
+    message String? @db.VarChar(512)
+    links Json?
+    date DateTime
+    data Json?
 }
 
-model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+model filebinaries {
+    id String @db.VarChar(512) @id
+    md5 String @db.VarChar(512)
+    buffer Bytes
+}
 
-    @@unique([identifier, token])
+model files {
+    id String @db.VarChar(512) @id
+    name String @db.VarChar(512)
+    size Int
+    mimetype String @db.VarChar(512)
+    data String @db.VarChar(512)
+    dateCreated DateTime
+    url String @db.VarChar(512)
+}
+
+model multifactorverifications {
+    id String @db.VarChar(512) @id
+    userId String @db.VarChar(512)
+    code String @db.VarChar(512)
+}
+
+model organisationinvitations {
+    id String @db.VarChar(512) @id
+    accepted Boolean
+    organisation String @db.VarChar(512)
+    email String @db.VarChar(512)
+    inviter String @db.VarChar(512)
+    dateCreated DateTime
+    rejected Boolean?
+    dateAccepted DateTime?
+}
+
+model organisationmembers {
+    id String @db.VarChar(512) @id
+    services Json?
+    isActive Boolean
+    isOrgManager Boolean
+    user String @db.VarChar(512)
+    organisation String @db.VarChar(512)
+    dateCreated DateTime
+    notifications Json?
+}
+
+model organisations {
+    id String @db.VarChar(512) @id
+    services Json?
+    billing Json?
+    partnerCode String? @db.VarChar(512)
+    name String @db.VarChar(512)
+    dateCreated DateTime
+    supportPlans String? @db.VarChar(512)
+    address String? @db.VarChar(512)
+    phone String? @db.VarChar(512)
+    website String? @db.VarChar(512)
+    userCap Int
+    logo String? @db.VarChar(512)
+    bokDate DateTime?
+    offlineDate DateTime?
+}
+
+model sessions {
+    id String @db.VarChar(512) @id
+    userId String @db.VarChar(512)
+    source String @db.VarChar(512)
+    token String @db.VarChar(512)
+    dateCreated DateTime
+    expiry DateTime
+}
+
+model supporttickets {
+    id String @db.VarChar(512) @id
+    status String @db.VarChar(512)
+    title String @db.VarChar(512)
+    relevantApp String @db.VarChar(512)
+    severity String @db.VarChar(512)
+    type String? @db.VarChar(512)
+    description String? 
+    organisation String @db.VarChar(512)
+    dateOpened DateTime
+    comments Json?
+    timelogs Json?
+    reporter String? @db.VarChar(512)
+    support String? @db.VarChar(512)
+    attachments Json?
+    billable String? @db.VarChar(512)
+    ticketNumber String? @db.VarChar(512)
+}
+
+model teams {
+    id String @db.VarChar(512) @id
+    isEnabled Boolean?
+    name String? @db.VarChar(512)
+    description String? @db.VarChar(512)
+    colour String? @db.VarChar(512)
+    service String? @db.VarChar(512)
+    organisation String @db.VarChar(512)
+    members Json?
+    managers Json?
+    option Json?
+    dateCreated DateTime?
+    savedDashboards Json?
+    inspectionKeyClients Json?
+	inspectionKeyOrganisations Json?
+	responsibleParties Json?
+}
+
+model useradmins {
+    id String @db.VarChar(512) @id
+    services Json?
+    settings Json?
+    emailVerified Boolean?
+    role String @db.VarChar(512)
+    phoneNumber String? @db.VarChar(512)
+    jobTitle String? @db.VarChar(512)
+    email String @db.VarChar(512)
+    name String @db.VarChar(512)
+    password String @db.VarChar(512)
+    hash String? @db.VarChar(512)
+    dateCreated DateTime
+    notifications Json?
+    lastActive DateTime?
+    upviseAccounts Json?
+    resetPasswordExpires DateTime?
+    resetPasswordToken String? @db.VarChar(512)
+}
+
+model users {
+    id String @db.VarChar(512) @id
+    settings Json?
+    role String @db.VarChar(512)
+    phoneNumber String? @db.VarChar(512)
+    jobTitle String? @db.VarChar(512)
+    email String @db.VarChar(512)
+    name String @db.VarChar(512)
+    password String @db.VarChar(512)
+    dateCreated DateTime
+    upviseAccounts Json?
+    lastActive DateTime?
+    emailVerified Boolean?
+    notifications Json?
+    services Json?
+    resetPasswordExpires DateTime?
+    resetPasswordToken String? @db.VarChar(512)
+    hash String? @db.VarChar(512)    
 }
