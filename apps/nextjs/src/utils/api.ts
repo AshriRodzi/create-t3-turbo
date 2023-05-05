@@ -30,4 +30,12 @@ export const api = createTRPCNext<AppRouter>({
   ssr: false,
 });
 
+export const objId = () =>{
+  const timestamp = Math.floor(new Date().getTime() / 1000).toString(16);
+  const objectId = timestamp + 'xxxxxxxxxxxxxxxx'.replace(/[x]/g, () => {
+      return Math.floor(Math.random() * 16).toString(16);
+  }).toLowerCase();
+  return objectId;
+}
+
 export { type RouterInputs, type RouterOutputs } from "@acme/api";
