@@ -88,13 +88,13 @@ const CreatePostForm: React.FC = () => {
 
   const { mutate, error } = api.useradmins.create.useMutation({
     async onSuccess() {
-      await utils.users.all.invalidate();
+      await utils.useradmins.all.invalidate();
     },
   });
 
   const { mutateAsync } = api.useradmins.update.useMutation({
     async onSuccess() {
-      await utils.users.all.invalidate();
+      await utils.useradmins.all.invalidate();
     },
   });
 
