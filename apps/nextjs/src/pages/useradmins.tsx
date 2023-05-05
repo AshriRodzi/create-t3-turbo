@@ -88,12 +88,26 @@ const CreatePostForm: React.FC = () => {
 
   const { mutate, error } = api.useradmins.create.useMutation({
     async onSuccess() {
+      setId('');
+      setRole('');
+      setPhoneNumber('');
+      setJobTitle('');
+      setEmail('');
+      setName('');
+      setPassword('');
       await utils.useradmins.all.invalidate();
     },
   });
 
   const { mutateAsync } = api.useradmins.update.useMutation({
     async onSuccess() {
+      setId('');
+      setRole('');
+      setPhoneNumber('');
+      setJobTitle('');
+      setEmail('');
+      setName('');
+      setPassword('');
       await utils.useradmins.all.invalidate();
     },
   });
@@ -264,7 +278,7 @@ const Home: NextPage = () => {
       <main className="flex h-screen flex-col items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
         <div className="container mt-12 flex flex-col items-center justify-center gap-4 px-4 py-8">
           <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Users Table
+            Useradmins Table
           </h1>
           <AuthShowcase />
 

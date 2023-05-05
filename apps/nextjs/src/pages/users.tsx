@@ -88,12 +88,26 @@ const CreatePostForm: React.FC = () => {
 
   const { mutate, error } = api.users.create.useMutation({
     async onSuccess() {
+      setId('');
+      setRole('');
+      setPhoneNumber('');
+      setJobTitle('');
+      setEmail('');
+      setName('');
+      setPassword('');
       await utils.users.sanspaper.invalidate();
     },
   });
 
   const { mutateAsync } = api.users.update.useMutation({
     async onSuccess() {
+      setId('');
+      setRole('');
+      setPhoneNumber('');
+      setJobTitle('');
+      setEmail('');
+      setName('');
+      setPassword('');
       await utils.users.sanspaper.invalidate();
     },
   });
