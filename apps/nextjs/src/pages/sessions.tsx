@@ -12,9 +12,9 @@ const PostCard: React.FC<{
   return (
     <div className="flex flex-row rounded-lg bg-white/10 p-4 transition-all hover:scale-[101%]">
       <div className="flex-grow">
-        <h2 className="text-2xl font-bold text-blue-800">{post.name}</h2>
-        <p className="mt-2 text-sm text-green-800">{post.description}</p>
-        <p className="mt-2 text-sm text-green-800">{post.service}</p>
+        <h2 className="text-2xl font-bold text-blue-800">{post.userId}</h2>
+        <p className="mt-2 text-sm text-green-800">{post.source}</p>
+        <p className="mt-2 text-sm text-green-800">{post.token}</p>
         <p className="mt-2 text-sm text-green-800">{post.dateCreated?.toISOString()}</p>
       </div>
       <div>
@@ -32,41 +32,30 @@ const PostCard: React.FC<{
 const CreatePostForm: React.FC = () => {
   const utils = api.useContext();
 
-  const [isEnabled, setIsEnabled] = useState(true);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [colour, setColour] = useState("");
-  const [service, setService] = useState("");
-  const [organisation, setOrganisation] = useState("623bc8b547af5d47df5b25a8");
-  const [members, setMembers] = useState([{user:"60651502e0a4350030f4a1d8", dateJoined:"2023-01-23T23:46:19.650Z"}]);
-  const [managers, setManagers] = useState([]);
-  const [option, setOption] = useState({teamId:"SANS PAPER DEMO (Sales Team)"});
-  const [savedDashboards, setSavedDashboards] = useState([]);
-  const [inspectionKeyClients, setInspectionKeyClients] = useState([]);
-  const [inspectionKeyOrganisations, setInspectionKeyOrganisations] = useState([]);
-  const [responsibleParties, setResponsibleParties] = useState([]);
-
+  
+  const [userID, setUserId] = useState("");
+  const [source, setSource] = useState("");
+  const [token, setToken] = useState("");
   const [id, setId] = useState("");
 
-  const { mutate, error } = api.teams.create.useMutation({
+  const { mutate, error } = api.sessions.create.useMutation({
     async onSuccess() {
       setId('');
-      setName('');
-      setDescription('');
-      setColour('');
-      setService('');
-      await utils.teams.all.invalidate();
+      setUserId('');
+      setSource('');
+      setToken('');
+      await utils.sessions.all.invalidate();
     },
   });
 
-  const { mutateAsync } = api.teams.update.useMutation({
+  const { mutateAsync } = api.sessions.update.useMutation({
     async onSuccess() {
       setId('');
-      setName('');
-      setDescription('');
-      setColour('');
-      setService('');
-      await utils.teams.all.invalidate();
+      setId('');
+      setUserId('');
+      setSource('');
+      setToken('');
+      await utils.sessions.all.invalidate();
     },
   });
 
@@ -87,9 +76,9 @@ const CreatePostForm: React.FC = () => {
 
       <input
         className="mb-2 rounded bg-white/10 p-2 text-white"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Name"
+        value={userID}
+        onChange={(e) => setUserId(e.target.value)}
+        placeholder="User Id"
       />
       {error?.data?.zodError?.fieldErrors.title && (
         <span className="mb-2 text-red-500">
@@ -100,9 +89,9 @@ const CreatePostForm: React.FC = () => {
 
       <input
         className="mb-2 rounded bg-white/10 p-2 text-white"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="Description"
+        value={source}
+        onChange={(e) => setSource(e.target.value)}
+        placeholder="Source"
       />
       {error?.data?.zodError?.fieldErrors.content && (
         <span className="mb-2 text-red-500">
@@ -113,9 +102,9 @@ const CreatePostForm: React.FC = () => {
 
       <input
         className="mb-2 rounded bg-white/10 p-2 text-white"
-        value={colour}
-        onChange={(e) => setColour(e.target.value)}
-        placeholder="Colour"
+        value={token}
+        onChange={(e) => setToken(e.target.value)}
+        placeholder="Token"
       />
       {error?.data?.zodError?.fieldErrors.title && (
         <span className="mb-2 text-red-500">
@@ -123,17 +112,7 @@ const CreatePostForm: React.FC = () => {
         </span>
       )}
 
-      <input
-        className="mb-2 rounded bg-white/10 p-2 text-white"
-        value={service}
-        onChange={(e) => setService(e.target.value)}
-        placeholder="Service"
-      />
-      {error?.data?.zodError?.fieldErrors.title && (
-        <span className="mb-2 text-red-500">
-          {error.data.zodError.fieldErrors.title}
-        </span>
-      )}      
+      
 
 
       <button
@@ -141,20 +120,11 @@ const CreatePostForm: React.FC = () => {
         onClick={() => {
           mutate({
             id: objId(),
-            isEnabled: isEnabled,
-            name: name,
-            description: description,
-            colour: colour,
-            service: service,
-            organisation: organisation,
-            members: members,
-            managers: managers,
-            option: option,
+            userId: userID,
+            source: source,
+            token: token,
             dateCreated: new Date().toISOString(),
-            savedDashboards: savedDashboards,
-            inspectionKeyClients: inspectionKeyClients,
-            inspectionKeyOrganisations: inspectionKeyOrganisations,
-            responsibleParties: responsibleParties
+            expiry: new Date().toISOString(),
           });
         }}
       >
@@ -166,20 +136,11 @@ const CreatePostForm: React.FC = () => {
         onClick={() => {
           mutateAsync({
             id: id,
-            isEnabled: isEnabled,
-            name: name,
-            description: description,
-            colour: colour,
-            service: service,
-            organisation: organisation,
-            members: members,
-            managers: managers,
-            option: option,
+            userId: userID,
+            source: source,
+            token: token,
             dateCreated: new Date().toISOString(),
-            savedDashboards: savedDashboards,
-            inspectionKeyClients: inspectionKeyClients,
-            inspectionKeyOrganisations: inspectionKeyOrganisations,
-            responsibleParties: responsibleParties
+            expiry: new Date().toISOString(),
           });
         }}
       >
@@ -190,10 +151,10 @@ const CreatePostForm: React.FC = () => {
 };
 
 const Home: NextPage = () => {
-  const postQuery = api.teams.all.useQuery();
-  //const postQuery = api.teams.byId.useQuery({id : '63e186a3e0c8720e42d7efc4'});
-  //const postQuery = api.teams.byEmail.useQuery({email : 'karen.kneebone@biomix.com.au'});
-  const deletePostMutation = api.teams.delete.useMutation({
+  const postQuery = api.sessions.all.useQuery();
+  //const postQuery = api.sessions.byId.useQuery({id : '63e186a3e0c8720e42d7efc4'});
+  //const postQuery = api.sessions.byEmail.useQuery({email : 'karen.kneebone@biomix.com.au'});
+  const deletePostMutation = api.sessions.delete.useMutation({
     onSettled: () => postQuery.refetch(),
   });
 
@@ -208,7 +169,7 @@ const Home: NextPage = () => {
       <main className="flex h-screen flex-col items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
         <div className="container mt-12 flex flex-col items-center justify-center gap-4 px-4 py-8">
           <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Teams Table
+            Sessions Table
           </h1>
           <AuthShowcase />
 

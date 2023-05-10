@@ -12,10 +12,10 @@ const PostCard: React.FC<{
   return (
     <div className="flex flex-row rounded-lg bg-white/10 p-4 transition-all hover:scale-[101%]">
       <div className="flex-grow">
-        <h2 className="text-2xl font-bold text-blue-800">{post.name}</h2>
-        <p className="mt-2 text-sm text-green-800">{post.description}</p>
-        <p className="mt-2 text-sm text-green-800">{post.service}</p>
-        <p className="mt-2 text-sm text-green-800">{post.dateCreated?.toISOString()}</p>
+        <h2 className="text-2xl font-bold text-blue-800">{post.status}</h2>
+        <p className="mt-2 text-sm text-green-800">{post.title}</p>
+        <p className="mt-2 text-sm text-green-800">{post.relevantApp}</p>
+        <p className="mt-2 text-sm text-green-800">{post.severity}</p>
       </div>
       <div>
         <span
@@ -32,41 +32,45 @@ const PostCard: React.FC<{
 const CreatePostForm: React.FC = () => {
   const utils = api.useContext();
 
-  const [isEnabled, setIsEnabled] = useState(true);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [colour, setColour] = useState("");
-  const [service, setService] = useState("");
-  const [organisation, setOrganisation] = useState("623bc8b547af5d47df5b25a8");
-  const [members, setMembers] = useState([{user:"60651502e0a4350030f4a1d8", dateJoined:"2023-01-23T23:46:19.650Z"}]);
-  const [managers, setManagers] = useState([]);
-  const [option, setOption] = useState({teamId:"SANS PAPER DEMO (Sales Team)"});
-  const [savedDashboards, setSavedDashboards] = useState([]);
-  const [inspectionKeyClients, setInspectionKeyClients] = useState([]);
-  const [inspectionKeyOrganisations, setInspectionKeyOrganisations] = useState([]);
-  const [responsibleParties, setResponsibleParties] = useState([]);
-
   const [id, setId] = useState("");
+  const [status, setStatus] = useState("");
+  const [title, setTitle] = useState("");
+  const [relevantApp, setRelevantApp] = useState("");
+  const [severity, setSeverity] = useState("");
+  const [type, setType] = useState("");
+  const [description, setDescription] = useState("");
+  const [organisation, setOrganisation] = useState("5d771e7f7b47d60034e87927");
+  const [comments, setComments] = useState([{_id:"5d79e72d20e7730034760b96",author:"5d75b07584182e0033b6fe16",content:"Hi Schae, I followed up with our developer to get this resolved. Kind Regards, Marcus",date:"2019-09-12T06:35:25.022Z"}]);
+  const [timelogs, setTimelogs] = useState([]);
+  const [reporter, setReporter] = useState("5d75b07584182e0033b6fe16");
+  const [support, setSupport] = useState("Bronze");
+  const [attachments, setAttachments] = useState([]);
+  const [billable, setBillable] = useState("N/A");
+  const [ticketNumber, setTicketNumber] = useState("PHT-2147");
 
-  const { mutate, error } = api.teams.create.useMutation({
+  const { mutate, error } = api.supporttickets.create.useMutation({
     async onSuccess() {
       setId('');
-      setName('');
+      setStatus('');
+      setTitle('');
+      setRelevantApp('');
+      setSeverity('');
+      setType('');
       setDescription('');
-      setColour('');
-      setService('');
-      await utils.teams.all.invalidate();
+      await utils.supporttickets.all.invalidate();
     },
   });
 
-  const { mutateAsync } = api.teams.update.useMutation({
+  const { mutateAsync } = api.supporttickets.update.useMutation({
     async onSuccess() {
       setId('');
-      setName('');
+      setStatus('');
+      setTitle('');
+      setRelevantApp('');
+      setSeverity('');
+      setType('');
       setDescription('');
-      setColour('');
-      setService('');
-      await utils.teams.all.invalidate();
+      await utils.supporttickets.all.invalidate();
     },
   });
 
@@ -87,35 +91,9 @@ const CreatePostForm: React.FC = () => {
 
       <input
         className="mb-2 rounded bg-white/10 p-2 text-white"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Name"
-      />
-      {error?.data?.zodError?.fieldErrors.title && (
-        <span className="mb-2 text-red-500">
-          {error.data.zodError.fieldErrors.title}
-        </span>
-      )}
-
-
-      <input
-        className="mb-2 rounded bg-white/10 p-2 text-white"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="Description"
-      />
-      {error?.data?.zodError?.fieldErrors.content && (
-        <span className="mb-2 text-red-500">
-          {error.data.zodError.fieldErrors.content}
-        </span>
-      )}
-
-
-      <input
-        className="mb-2 rounded bg-white/10 p-2 text-white"
-        value={colour}
-        onChange={(e) => setColour(e.target.value)}
-        placeholder="Colour"
+        value={status}
+        onChange={(e) => setStatus(e.target.value)}
+        placeholder="Status"
       />
       {error?.data?.zodError?.fieldErrors.title && (
         <span className="mb-2 text-red-500">
@@ -125,9 +103,9 @@ const CreatePostForm: React.FC = () => {
 
       <input
         className="mb-2 rounded bg-white/10 p-2 text-white"
-        value={service}
-        onChange={(e) => setService(e.target.value)}
-        placeholder="Service"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Title"
       />
       {error?.data?.zodError?.fieldErrors.title && (
         <span className="mb-2 text-red-500">
@@ -135,26 +113,74 @@ const CreatePostForm: React.FC = () => {
         </span>
       )}      
 
+      <input
+        className="mb-2 rounded bg-white/10 p-2 text-white"
+        value={relevantApp}
+        onChange={(e) => setRelevantApp(e.target.value)}
+        placeholder="Relevant App"
+      />
+      {error?.data?.zodError?.fieldErrors.title && (
+        <span className="mb-2 text-red-500">
+          {error.data.zodError.fieldErrors.title}
+        </span>
+      )}
+
+      <input
+        className="mb-2 rounded bg-white/10 p-2 text-white"
+        value={severity}
+        onChange={(e) => setSeverity(e.target.value)}
+        placeholder="Severity"
+      />
+      {error?.data?.zodError?.fieldErrors.title && (
+        <span className="mb-2 text-red-500">
+          {error.data.zodError.fieldErrors.title}
+        </span>
+      )}
+
+      <input
+        className="mb-2 rounded bg-white/10 p-2 text-white"
+        value={type}
+        onChange={(e) => setType(e.target.value)}
+        placeholder="Type"
+      />
+      {error?.data?.zodError?.fieldErrors.title && (
+        <span className="mb-2 text-red-500">
+          {error.data.zodError.fieldErrors.title}
+        </span>
+      )}
+
+      <input
+        className="mb-2 rounded bg-white/10 p-2 text-white"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="Description"
+      />
+      {error?.data?.zodError?.fieldErrors.title && (
+        <span className="mb-2 text-red-500">
+          {error.data.zodError.fieldErrors.title}
+        </span>
+      )}
 
       <button
         className="rounded bg-pink-400 p-2 font-bold"
         onClick={() => {
           mutate({
             id: objId(),
-            isEnabled: isEnabled,
-            name: name,
-            description: description,
-            colour: colour,
-            service: service,
-            organisation: organisation,
-            members: members,
-            managers: managers,
-            option: option,
-            dateCreated: new Date().toISOString(),
-            savedDashboards: savedDashboards,
-            inspectionKeyClients: inspectionKeyClients,
-            inspectionKeyOrganisations: inspectionKeyOrganisations,
-            responsibleParties: responsibleParties
+            status: status,
+            title: title, 
+            relevantApp: relevantApp, 
+            severity: severity, 
+            type: type, 
+            description: description, 
+            organisation: organisation, 
+            dateOpened: new Date().toISOString(),
+            comments: comments, 
+            timelogs: timelogs, 
+            reporter: reporter, 
+            support: support, 
+            attachments: attachments, 
+            billable: billable, 
+            ticketNumber: ticketNumber 
           });
         }}
       >
@@ -166,20 +192,21 @@ const CreatePostForm: React.FC = () => {
         onClick={() => {
           mutateAsync({
             id: id,
-            isEnabled: isEnabled,
-            name: name,
-            description: description,
-            colour: colour,
-            service: service,
-            organisation: organisation,
-            members: members,
-            managers: managers,
-            option: option,
-            dateCreated: new Date().toISOString(),
-            savedDashboards: savedDashboards,
-            inspectionKeyClients: inspectionKeyClients,
-            inspectionKeyOrganisations: inspectionKeyOrganisations,
-            responsibleParties: responsibleParties
+            status: status,
+            title: title, 
+            relevantApp: relevantApp, 
+            severity: severity, 
+            type: type, 
+            description: description, 
+            organisation: organisation, 
+            dateOpened: new Date().toISOString(),
+            comments: comments, 
+            timelogs: timelogs, 
+            reporter: reporter, 
+            support: support, 
+            attachments: attachments, 
+            billable: billable, 
+            ticketNumber: ticketNumber
           });
         }}
       >
@@ -190,10 +217,9 @@ const CreatePostForm: React.FC = () => {
 };
 
 const Home: NextPage = () => {
-  const postQuery = api.teams.all.useQuery();
-  //const postQuery = api.teams.byId.useQuery({id : '63e186a3e0c8720e42d7efc4'});
-  //const postQuery = api.teams.byEmail.useQuery({email : 'karen.kneebone@biomix.com.au'});
-  const deletePostMutation = api.teams.delete.useMutation({
+  const postQuery = api.supporttickets.all.useQuery();
+  //const postQuery = api.supporttickets.byId.useQuery({id : '63e186a3e0c8720e42d7efc4'});
+  const deletePostMutation = api.supporttickets.delete.useMutation({
     onSettled: () => postQuery.refetch(),
   });
 
@@ -208,7 +234,7 @@ const Home: NextPage = () => {
       <main className="flex h-screen flex-col items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
         <div className="container mt-12 flex flex-col items-center justify-center gap-4 px-4 py-8">
           <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Teams Table
+            Support Tickets Table
           </h1>
           <AuthShowcase />
 

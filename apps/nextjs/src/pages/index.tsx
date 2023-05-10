@@ -35,6 +35,33 @@ const CreatePostForm: React.FC = () => {
       >
         Teams
       </button>
+      <br/>
+      <button
+        className="rounded bg-pink-400 p-2 font-bold"
+        onClick={() => {
+          router.push('/supporttickets');
+        }}
+      >
+        Support Tickets
+      </button>
+      <br/>
+      <button
+        className="rounded bg-pink-400 p-2 font-bold"
+        onClick={() => {
+          router.push('/sessions');
+        }}
+      >
+        Sessions
+      </button>
+      <br/>
+      <button
+        className="rounded bg-pink-400 p-2 font-bold"
+        onClick={() => {
+          router.push('/organisations');
+        }}
+      >
+        Organisations
+      </button>
     </div>
   );
 };

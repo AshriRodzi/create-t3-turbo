@@ -100,7 +100,7 @@ model organisations {
     address String? @db.VarChar(512)
     phone String? @db.VarChar(512)
     website String? @db.VarChar(512)
-    userCap Int
+    userCap Int?
     logo String? @db.VarChar(512)
     bokDate DateTime?
     offlineDate DateTime?
